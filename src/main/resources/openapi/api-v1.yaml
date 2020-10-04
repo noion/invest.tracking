@@ -1,0 +1,76 @@
+openapi: 3.0.2
+
+info:
+  title: Tinkoff Investments tracking API
+  description: Tracking API
+  version: 0.1.0
+  contact:
+    name: noion
+
+tags:
+  - name: info
+    description: Security info
+
+paths:
+  /contracts:
+    get:
+      tags:
+        - info
+      summary: getContracts
+      description: Get registrated contracts
+      operationId: getContracts
+#      security:
+#        - apiKey: [ ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+        401:
+          description: Unauthorized error
+        500:
+          description: Service Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+#  TODO add auth to Tinkoff by sending apiKey
+#  securitySchemes:
+#    apiKey:
+#      type: apiKey
+#      in: header
+#      name: X-API-KEY
+  schemas:
+    AccountList:
+      type: object
+      description: Account list
+      required:
+        - brokerAccount
+      properties:
+        brokerAccount:
+          type: array
+          items:
+            type: object
+            properties:
+              brokerAccountType:
+                type: string
+                enum: [ Brocker, Iis ]
+                description: brocker account type
+              brokerAccountId:
+                type: string
+                description: contract number
+    ErrorResponse:
+      type: object
+      description: Error message
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: Internal error code
+        message:
+          type: string
+          description: Error description

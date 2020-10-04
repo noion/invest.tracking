@@ -1,27 +1,44 @@
 package ru.noion.invest.tracking.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.noion.invest.tracking.logic.GetContract;
+import ru.noion.invest.tracking.v1.api.InfoApiDelegate;
+import ru.noion.invest.tracking.v1.model.AccountList;
 import ru.tinkoff.invest.openapi.OpenApi;
 import ru.tinkoff.invest.openapi.models.operations.OperationsList;
 import ru.tinkoff.invest.openapi.models.user.AccountsList;
-import ru.tinkoff.invest.openapi.okhttp.OkHttpOpenApiFactory;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-@org.springframework.web.bind.annotation.RestController
+@Slf4j
+@RestController
 @RequiredArgsConstructor
-public class RestController {
-    private final OkHttpOpenApiFactory okHttpOpenApiFactory;
+public class InfoController implements InfoApiDelegate {
+
+    private final OpenApi api;
+    private final GetContract getContract;
+
+    @Override
+    public ResponseEntity<AccountList> getContracts() {
+        try {
+            log.debug("in getContracts");
+            AccountList accountList = getContract.activate();
+            return ResponseEntity.ok(accountList);
+        } finally {
+            log.debug("out getContracts");
+        }
+    }
 
     @GetMapping("/test")
     public List<OperationsList> someResponse() {
-        OpenApi api = okHttpOpenApiFactory.createOpenApiClient(Executors.newFixedThreadPool(100));
         AccountsList accountsList = api.getUserContext().getAccounts().join();
         return accountsList.accounts.stream()
                 .map(brokerAccount -> {
