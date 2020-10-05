@@ -36,6 +36,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /calculate:
+    get:
+      tags:
+        - info
+      summary: getFinResByFigi
+      description: Calculate finantial result by ticker
+      parameters:
+        - name: contractId
+          description: contract id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: figi
+          description: figi
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calculation'
+        401:
+          description: Unauthorized error
+        500:
+          description: Service Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /allTradedFigis:
+    get:
+      tags:
+        - info
+      summary: getAllTradedFigis
+      description: Get all figis that traded
+      parameters:
+        - name: contractId
+          description: contract id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Figis'
+        401:
+          description: Unauthorized error
+        500:
+          description: Service Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
 #  TODO add auth to Tinkoff by sending apiKey
 #  securitySchemes:
@@ -58,10 +120,32 @@ components:
               brokerAccountType:
                 type: string
                 enum: [ Brocker, Iis ]
-                description: brocker account type
+                description: Brocker account type
               brokerAccountId:
                 type: string
                 description: contract number
+    Calculation:
+      type: object
+      description: Calculation trade result
+      properties:
+          isin:
+            type: string
+            description: figi
+          finanshialResult:
+            type: double
+            description: Finantial result with brocker fee included
+          brockerFee:
+            type: double
+            description: Brocker fee included
+          currency:
+            type: string
+            description: Currency
+    Figis:
+      type: array
+      description: Traded isins
+      items:
+        type: string
+        description: figi
     ErrorResponse:
       type: object
       description: Error message
