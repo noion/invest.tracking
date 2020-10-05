@@ -43,6 +43,7 @@ paths:
       summary: getFinResByFigi
       description: Calculate finantial result by ticker
       parameters:
+#        add period
         - name: contractId
           description: contract id
           in: query
@@ -77,6 +78,7 @@ paths:
       summary: getAllTradedFigis
       description: Get all figis that traded
       parameters:
+#        add period
         - name: contractId
           description: contract id
           in: query
@@ -128,7 +130,7 @@ components:
       type: object
       description: Calculation trade result
       properties:
-          isin:
+          figi:
             type: string
             description: figi
           finanshialResult:

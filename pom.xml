@@ -115,6 +115,9 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi/api-v1.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
+                            <typeMappings>
+                                <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                            </typeMappings>
                             <configOptions>
                                 <sourceFolder>src/generated/java/main</sourceFolder>
                                 <basePackage>${default.package}</basePackage>
