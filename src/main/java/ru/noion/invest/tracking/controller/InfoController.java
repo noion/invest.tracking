@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noion.invest.tracking.logic.AllTradedFigisGet;
+import ru.noion.invest.tracking.logic.CalculationGet;
 import ru.noion.invest.tracking.logic.GetContract;
 import ru.noion.invest.tracking.v1.api.InfoApiDelegate;
 import ru.noion.invest.tracking.v1.model.AccountList;
@@ -20,6 +21,7 @@ public class InfoController implements InfoApiDelegate {
 
     private final GetContract getContract;
     private final AllTradedFigisGet allTradedFigisGet;
+    private final CalculationGet calculateGet;
 
     @Override
     public ResponseEntity<AccountList> getContracts() {
@@ -39,7 +41,10 @@ public class InfoController implements InfoApiDelegate {
 
     @Override
     public ResponseEntity<Calculation> calculateGet(String contractId, String figi) {
-        return null;
+        return logAndProcessOperation("allTradedFigisGet", () -> {
+            Calculation calculation = calculateGet.activate(contractId, figi);
+            return ResponseEntity.ok(calculation);
+        });
     }
 
     private <T> T logAndProcessOperation(String operationName, Supplier<T> supplier) {
