@@ -127,8 +127,8 @@ paths:
           schema:
             format: date
             type: string
-        - name: includeComission
-          description: Include comissions in result calculation
+        - name: includeCommission
+          description: Include commission in result calculation
           in: query
           required: false
           schema:
