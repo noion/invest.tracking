@@ -193,23 +193,26 @@ components:
           description: Currency
     Figis:
       type: array
-      description: Traded isins
+      description: Traded figis
       items:
         type: string
         description: figi
     FinRes:
-      type: array
-      description: Finantial result devide by currency
-      items:
-        type: object
-        description: Finantial result
-        properties:
-          currency:
-            type: string
-            description: Currency
-          sum:
-            type: double
-            description: Finantial result in currency of calculation
+      type: object
+      description: Finantial result
+      properties:
+        finResByCurrency:
+          type: array
+          items:
+            type: object
+            description: Finantial result
+            properties:
+              currency:
+                type: string
+                description: Currency
+              sum:
+                type: double
+                description: Finantial result in currency of calculation
     ErrorResponse:
       type: object
       description: Error message
