@@ -19,8 +19,8 @@ paths:
       summary: getContracts
       description: Get registrated contracts
       operationId: getContracts
-#      security:
-#        - apiKey: [ ]
+      #      security:
+      #        - apiKey: [ ]
       responses:
         200:
           description: OK
@@ -43,15 +43,15 @@ paths:
       summary: getFinResByFigi
       description: Calculate finantial result by ticker
       parameters:
-#        add period
+        #        add period
         - name: contractId
-          description: contract id
+          description: Contract id
           in: query
           required: true
           schema:
             type: string
         - name: figi
-          description: figi
+          description: Figi
           in: query
           required: true
           schema:
@@ -78,9 +78,9 @@ paths:
       summary: getAllTradedFigis
       description: Get all figis that traded
       parameters:
-#        add period
+        #        add period
         - name: contractId
-          description: contract id
+          description: Contract id
           in: query
           required: true
           schema:
@@ -100,13 +100,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /finRes:
+    get:
+      tags:
+        - info
+      summary: getFinantialResult
+      description: Get finantial result for period
+      parameters:
+        - name: contractId
+          description: Contract id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          description: Period start date
+          in: query
+          required: true
+          schema:
+            format: date
+            type: string
+        - name: endDate
+          description: Period end date
+          in: query
+          required: true
+          schema:
+            format: date
+            type: string
+        - name: includeComission
+          description: Include comissions in result calculation
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinRes'
+        401:
+          description: Unauthorized error
+        500:
+          description: Service Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
-#  TODO add auth to Tinkoff by sending apiKey
-#  securitySchemes:
-#    apiKey:
-#      type: apiKey
-#      in: header
-#      name: X-API-KEY
+  #  TODO add auth to Tinkoff by sending apiKey
+  #  securitySchemes:
+  #    apiKey:
+  #      type: apiKey
+  #      in: header
+  #      name: X-API-KEY
   schemas:
     AccountList:
       type: object
@@ -130,24 +179,37 @@ components:
       type: object
       description: Calculation trade result
       properties:
-          figi:
-            type: string
-            description: figi
-          finanshialResult:
-            type: double
-            description: Finantial result with brocker fee included
-          brockerFee:
-            type: double
-            description: Brocker fee included
-          currency:
-            type: string
-            description: Currency
+        figi:
+          type: string
+          description: Figi
+        finanshialResult:
+          type: double
+          description: Finantial result with brocker fee included
+        brockerFee:
+          type: double
+          description: Brocker fee included
+        currency:
+          type: string
+          description: Currency
     Figis:
       type: array
       description: Traded isins
       items:
         type: string
         description: figi
+    FinRes:
+      type: array
+      description: Finantial result devide by currency
+      items:
+        type: object
+        description: Finantial result
+        properties:
+          currency:
+            type: string
+            description: Currency
+          sum:
+            type: double
+            description: Finantial result in currency of calculation
     ErrorResponse:
       type: object
       description: Error message
